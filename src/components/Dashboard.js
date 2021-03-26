@@ -34,6 +34,21 @@ class Dashboard extends Component {
     focused: null
   };
   
+  /* Instance Method */
+  selectPanel(id) {
+    this.setState({
+    focused: id
+    });
+  } 
+
+  /* Class property with arrow function method */
+  // selectPanel = id => {
+  //  this.setState({
+  //   focused: id
+  //  });
+  // }
+
+  
   render() {
     const dashboardClasses = classnames("dashboard", {
       "dashboard--focused": this.state.focused
@@ -53,6 +68,7 @@ class Dashboard extends Component {
           id={panel.id}
           label={panel.label}
           value={panel.value}
+          onSelect={event => this.selectPanel(panel.id)}
         />
       ));
     
