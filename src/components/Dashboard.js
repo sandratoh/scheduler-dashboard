@@ -12,6 +12,8 @@ import {
   getInterviewsPerDay
  } from "helpers/selectors";
 
+import { setInterview } from "helpers/reducers";
+
 const data = [
   {
     id: 1,
@@ -36,8 +38,6 @@ const data = [
 ];
 
 class Dashboard extends Component {
-
-  
   state = {
     loading: true,
     focused: null,
@@ -49,11 +49,11 @@ class Dashboard extends Component {
   // Lifecycle phase: Mount
   componentDidMount() {
     const focused = JSON.parse(localStorage.getItem("focused"));
-
+    
     if (focused) {
       this.setState({ focused });
     };
-
+    
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
@@ -66,6 +66,19 @@ class Dashboard extends Component {
         interviewers: interviewers.data
       });
     });
+
+    // WebSocket connection
+    this.socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    this.socket.onmessage = event => {
+      const data = JSON.parse(event.data);
+    
+      if (typeof data === "object" && data.type === "SET_INTERVIEW") {
+        this.setState(previousState =>
+          setInterview(previousState, data.id, data.interview)
+        );
+      }
+    };
   };
 
   // Lifecycle phase: Update
@@ -74,6 +87,11 @@ class Dashboard extends Component {
       localStorage.setItem("focused", JSON.stringify(this.state.focused));
     }
   };
+
+  // Lifecycle phase: Unmount
+  componentWillUnmount() {
+    this.soccket.close();
+  }
 
   /* Instance Method */
   selectPanel(id) {
