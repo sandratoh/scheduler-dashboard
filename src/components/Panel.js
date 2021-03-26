@@ -7,6 +7,7 @@ class Panel extends Component {
     return (
       <section
         className="dashboard__panel"
+        // Don't need function and id prop after passing arrow fn in parent
         onClick={onSelect}
       >
         <h1 className="dashboard__panel-header">{label}</h1>

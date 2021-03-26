@@ -36,9 +36,9 @@ class Dashboard extends Component {
   
   /* Instance Method */
   selectPanel(id) {
-    this.setState({
-    focused: id
-    });
+    this.setState(previousState => ({
+      focused: previousState.focused !== null ? null : id
+    }));
   } 
 
   /* Class property with arrow function method */
@@ -68,6 +68,7 @@ class Dashboard extends Component {
           id={panel.id}
           label={panel.label}
           value={panel.value}
+          // bind with arrow function
           onSelect={event => this.selectPanel(panel.id)}
         />
       ));
