@@ -90,7 +90,7 @@ class Dashboard extends Component {
 
   // Lifecycle phase: Unmount
   componentWillUnmount() {
-    this.soccket.close();
+    this.socket.close();
   }
 
   /* Instance Method */
